@@ -583,3 +583,138 @@ exports.getUserInformation = (req, res) => {
         );
     });
 };
+
+
+/**
+ * Endpoint para asignar un nuevo titulo a un usuario.
+ * Se recibe el email del usuario a actualizar y el nuevo titulo a 
+ * asignarle dentro del body de la request
+ * TODO: Debe existir algun tipo de autorizacion para evitar que 
+ * cualquiera pueda asignar titulos
+ * @function
+ * @public
+ * @param {Object} req - Un HTTP Request
+ * @param {Object} res - Un HTTP Response
+ * @returns {Object}
+ */
+exports.addTitle = (req, res) => {
+  const email = req.body.email;
+  const new_title = req.body.title  
+  if (!email)
+    return res.status(401).send(response(false, "", "El Email es necesario"));
+  if (!new_title)
+    return res.status(401).send(response(false, "", "El titulo es necesario."));
+
+  this.findByEmail(email).then(
+    async (user) => {
+      if (!user){
+        error = new Error(`No existe el usuario "${email}"`)
+        error.code = 404
+        throw error
+      }
+
+      let existsTitle;
+      if (user.titles && user.titles.length)
+        existsTitle = user.titles.find(
+          (title) => title === new_title
+        );
+      else 
+        user.titles = [];
+
+      if (existsTitle){
+        error = new Error(
+          `El usuario ya tiene el titulo "${new_title}"`
+        )
+        error.code = 400
+        throw error
+      }
+      
+      user.titles.push(new_title);
+      user.markModified("titles");
+      user.save((err, usr) => {
+        if (err)
+          throw new Error(
+            "Error inesperado al agregar el titulo"
+          )          
+
+        return res.status(200).send(response(
+          true, null, 
+          `Titulo "${new_title}" agregado a ${email}`));
+      });
+    }).catch((error) => {     
+      return res
+        .status(error.code || 500)
+        .send(response(
+          false, 
+          error, 
+          error.message
+        ));
+    });
+};
+
+
+/**
+ * Endpoint para eliminar un titulo de un usuario.
+ * Se recibe el email del usuario a actualizar y el titulo a eliminar
+ * TODO: Debe existir algun tipo de autorizacion para evitar que 
+ * cualquiera pueda eliminar titulos
+ * @function
+ * @public
+ * @param {Object} req - Un HTTP Request
+ * @param {Object} res - Un HTTP Response
+ * @returns {Object}
+ */
+exports.removeTitle = (req, res) => {
+  const email = req.body.email;
+  const target_title = req.body.title  
+  if (!email)
+    return res.status(401).send(response(false, "", "El Email es necesario"));
+  if (!target_title)
+    return res.status(401).send(response(false, "", "El titulo es necesario."));
+
+  this.findByEmail(email).then(
+    async (user) => {
+      if (!user){
+        error = new Error(`No existe el usuario "${email}"`)
+        error.code = 404
+        throw error
+      }
+
+      if (!user.titles || !user.titles.length){
+        error = new Error(
+          `El usuario "${email}" no tiene el titulo "${target_title}"`
+        )
+        error.code = 404
+        throw error
+      }      
+      const existsTitle = user.titles.find((title) => title === target_title)
+      if (!existsTitle){
+        error = new Error(
+          `El usuario "${email}" no tiene el titulo "${target_title}"`
+        )
+        error.code = 404
+        throw error
+      }
+
+      user.titles.pull(target_title);
+      user.markModified("titles");
+      user.save((err, usr) => {
+        if (err)
+          throw new Error(
+            "Error inesperado al eliminar el titulo"
+          )          
+
+        return res.status(200).send(response(
+          true, null, 
+          `Titulo "${target_title}" eliminado de ${email}`));
+      });
+    }).catch((error) => {     
+      return res
+        .status(error.code || 500)
+        .send(response(
+          false, 
+          error, 
+          error.message
+        ));
+    });
+};

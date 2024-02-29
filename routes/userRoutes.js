@@ -8,6 +8,8 @@ router.get("/", userController.getUserInformation);
 // POSTs
 router.post("/", userController.create);
 router.post("/code", userController.codeValidate);
+router.post("/add_title", userController.addTitle);
+router.post("/remove_title", userController.removeTitle);
 
 // PUTs
 router.put("/", userController.updateUser);

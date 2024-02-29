@@ -41,7 +41,8 @@ const UserSchema = new Schema(
     last_ride: { type: Schema.Types.ObjectId, ref: 'Ride' },
     frequent_routes: { type: Array },
     isVerify: { type: Boolean },
-    temporalCode: { type: Number }
+    temporalCode: { type: Number },
+    titles: [ String ]
 
   }, {
     timestamps: true

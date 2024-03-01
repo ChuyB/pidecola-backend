@@ -39,6 +39,9 @@ app.use("/requests", requests);
 const algorithm = require("./routes/algorithmRoutes.js");
 app.use("/recommend", algorithm);
 
+const route = require("./routes/routeRoutes.js");
+app.use("/routes", route);
+
 const server = http.createServer(app);
 
 server.listen(port, () => {
@@ -61,7 +64,7 @@ server.listen(port, () => {
 |  |     |  | |  || |    |  |_|  ||___    |     | |  | |
 |  |     |  |_|  || |    |       |    |   | ___ | |__| |
 |  |____ |       || |___ |   _   | ___|   ||   ||      |
-|_______||_______||_____||__| |__||_______||___||______|`)
+|_______||_______||_____||__| |__||_______||___||______|`),
   );
   console.log(chalk.blue(`\nRunning in port ${port}`));
 });

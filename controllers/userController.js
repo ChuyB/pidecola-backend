@@ -281,16 +281,21 @@ exports.create = async (req, res) => {
  */
 
 exports.updateUser = (req, res) => {
-  const email = req.secret.email;
+  const token = autentication.viewAuthorization(req.headers.authorization);
+  const { sub } = jwt.verify(token, tokenKey, {
+    audience: process.env.AUDIENCE,
+  });
+
+  const { email } = sub;
   if (!email)
     return res.status(401).send(response(false, "", "El Email es necesario."));
   const query = {
     $set: {
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      age: req.body.age,
-      phone_number: req.body.phone_number,
-      major: req.body.major,
+      ...(req.body.first_name ? {first_name: req.body.first_name} : {}),
+      ...(req.body.last_name ? {last_name: req.body.last_name} : {}),
+      ...(req.body.age ? {age: req.body.age} : {}),
+      ...(req.body.phone_number ? {phone_number: req.body.phone_number} : {}),    
+      ...(req.body.major ? {major: req.body.major} : {}),      
     },
   };
   updateUserByEmail(email, query)
@@ -567,6 +572,7 @@ exports.getUserInformation = (req, res) => {
     return res.status(401).send(response(false, "", "El Email es necesario."));
   this.findByEmail(email)
     .then((usr) => {
+      console.log(usr)
       return res
         .status(200)
         .send(response(true, usr, "Peticion ejecutada con exito."));
@@ -632,10 +638,8 @@ exports.addTitle = (req, res) => {
       user.titles.push(new_title);
       user.markModified("titles");
       user.save((err, usr) => {
-        if (err)
-          throw new Error(
-            "Error inesperado al agregar el titulo"
-          )          
+        if (err)        
+          throw err    
 
         return res.status(200).send(response(
           true, null, 

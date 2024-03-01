@@ -1,4 +1,4 @@
-#Manual de Back-end
+# Manual de Back-end
 
 Este manual es una guía para añadir añadir nuevos controladores para la
 aplicación PideCola 3.0. Para saber cómo hacer modificaciones sobre los
@@ -8,22 +8,22 @@ la aplicación.
 ##Para agregar un nuevo controlador
 
 1. Genere el archivo `xController.js` en el directorio `/controllers`, donde
-`x` es un nombre descriptivo de su controlador. Por ejemplo:
+   `x` es un nombre descriptivo de su controlador. Por ejemplo:
 
 `userController.js` es el controlador de todas aquellas funciones relacionadas con los usuarios de la aplicación.
 
 2. Dentro de su archivo importe, usando la función `require` aquellos módulos
-que le sean de utilidad, cuidando importar solo aquellas clases, métodos y
-funciones que sean indispensables para el desarrollo de su controlador. Si
-requiere funciones para acceder a la base de datos, consulte el manual de
-la base de datos, asimismo, es muy probable que las funciones que usted
-requiere ya hayan sido implementadas en otro controlador y sean
-importables usando `require`.
+   que le sean de utilidad, cuidando importar solo aquellas clases, métodos y
+   funciones que sean indispensables para el desarrollo de su controlador. Si
+   requiere funciones para acceder a la base de datos, consulte el manual de
+   la base de datos, asimismo, es muy probable que las funciones que usted
+   requiere ya hayan sido implementadas en otro controlador y sean
+   importables usando `require`.
 
 3. En caso de que no haya ninguna función que haga lo que requiere, escríbala
-y **documéntela** dentro del código fuente de su controlador utilizando el
-**formato de jsdoc**. Incluya dentro de su documentación la forma de hacer
-modificaciones sobre su código.
+   y **documéntela** dentro del código fuente de su controlador utilizando el
+   **formato de jsdoc**. Incluya dentro de su documentación la forma de hacer
+   modificaciones sobre su código.
 
 No exporte funciones que accedan directamente a base de datos o a variables
 globales de la aplicación a no ser que sea estrictamente necesario. Exporte
@@ -39,13 +39,13 @@ el directorio `/__test__`
 ## Para agregar un archivo de pruebas del nuevo controlador `xController.js`
 
 1. Genere el archivo `xController.test.js` en el directorio `/__test__`, donde
-`x` es el nombre descriptivo de su controlador. Por ejemplo:
+   `x` es el nombre descriptivo de su controlador. Por ejemplo:
 
 `userController.js` tiene asociado su archivo de pruebas en el archivo
 `userController.test.js`
 
 2. Dentro de su archivo importe los controladores necesarios de la siguiente
-forma:
+   forma:
 
 ```JavaScript
 const x = require('../controllers/xController.js')
@@ -68,7 +68,7 @@ const httpMocks = require('node-mocks-http')
 Este último módulo es utilizado para simular las llamadas y respuestas HTTP dentro de la app.
 
 3. Para cada función que desee probar, genere su suite de pruebas de la
-siguiente forma:
+   siguiente forma:
 
 ```JavaScript
 describe("function to prove", () => {
@@ -99,6 +99,7 @@ Para ejecutar las pruebas basta con ejecutar vía interfaz de línea de
 comandos (CLI): `npm run test`
 
 ## Para conectar un nuevo controlador con el resto de la aplicación
+
 Para que su controlador sea accesible desde el Front-end, se debe agregar
 una nueva ruta para su controlador en el directorio `/routes` y ese archivo
 será usado por `index.js` aplicación.
@@ -106,7 +107,7 @@ será usado por `index.js` aplicación.
 ### Agregar el archivo a `/routes`
 
 1. Para el controlador `xController.js` genere el archivo `xRoutes.js` en el
-  directorio `/routes`, donde `x` es el nombre descriptivo de su controlador.
+   directorio `/routes`, donde `x` es el nombre descriptivo de su controlador.
 
 2. Para el controlador `xController.js` haga:
 
@@ -120,7 +121,7 @@ Dependiendo de la naturaleza de sus funciones, pueden corresponder con
 distintos métodos HTTP (PUT, GET, POST, ...)
 
 3. Para el método HTTP `Y` (`y` en minúsculas) genere el comentario `// Ys` y
-haga:
+   haga:
 
 ```JavaScript
 router.y('/func', xController.func)
@@ -151,7 +152,9 @@ router.put('/addVehicle', userController.addVehicle)
 
 module.exports = router
 ```
+
 ### Hacer visible la nueva ruta en `index.js`
+
 Agregada la ruta, esta debe poder ser visible debe ser visible en `index.js`
 entonces:
 
@@ -166,16 +169,16 @@ Para verificar que todo ha sido añadido sin errores léxico-sintácticos
 ejecute en CLI npm run start, debe aparecer:
 
 ```
-   _______  ___  ______  ______ 
+   _______  ___  ______  ______
   |   __  ||   ||      ||   ___|
   |  |  | ||   ||  __  ||  |
-  |  |__| ||   || |  | ||  |___ 
+  |  |__| ||   || |  | ||  |___
   |   ____||   || |  | ||   ___|
-  |  |     |   || |__| ||  | 
-  |  |     |   ||      ||  |___ 
+  |  |     |   || |__| ||  |
+  |  |     |   ||      ||  |___
   |__|     |___||______||______|
 
- _______  _______  _      _______  _______       ______ 
+ _______  _______  _      _______  _______       ______
 |   ____||       || |    |       ||___    |     |      |
 |  |     |   _   || |    |   _   |    |   |     |  __  |
 |  |     |  | |  || |    |  | |  | ___|   |     | |  | |
@@ -185,5 +188,6 @@ ejecute en CLI npm run start, debe aparecer:
 |_______||_______||_____||__| |__||_______||___||______|
 
 ```
+
 Si esto es así, todo ha sido exitoso y ya puede utilizar su nuevo
 controlador.

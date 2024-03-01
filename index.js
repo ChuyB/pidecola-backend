@@ -1,47 +1,52 @@
-'use strict'
+"use strict";
 
-const express = require('express')
-const bodyParser = require('body-parser')
-const chalk = require('chalk')
-const cors = require('cors')
-const http = require('http')
+const express = require("express");
+const bodyParser = require("body-parser");
+const chalk = require("chalk");
+const cors = require("cors");
+const http = require("http");
 
-const connections = require('./lib/connections.js')
-const cloudinary = require('./lib/cloudinaryConfig.js')
+const connections = require("./lib/connections.js");
 
-connections.connectDB()
-cloudinary.cloudinaryConfig()
+connections.connectDB();
 
-const app = express()
-app.disable('x-powered-by')
-const port = process.env.PORT || 5000
+const app = express();
+app.disable("x-powered-by");
+const port = process.env.PORT || 5000;
 
-app.use(bodyParser.json({ limit: '50mb', extended: true }))
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
-app.use(cors())
+app.use(bodyParser.json({ limit: "50mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+app.use(cors());
 
-const autentication = require('./autentication.js')
-app.use('/login', autentication.signIn)
+const autentication = require("./autentication.js");
 
 // Default security for all endpoints
-app.use(autentication.verifyAutentication)
+app.use(autentication.verifyAutentication);
 
-const user = require('./routes/userRoutes.js')
-app.use('/users', user)
+app.use("/login", autentication.signIn);
 
-const ride = require('./routes/rideRoutes.js')
-app.use('/rides', ride)
+app.use("/session", autentication.validateSession);
 
-const requests = require('./routes/requestsRoutes.js')
-app.use('/requests', requests)
+const user = require("./routes/userRoutes.js");
+app.use("/users", user);
 
-const algorithm = require('./routes/algorithmRoutes.js')
-app.use('/recommend', algorithm)
+const ride = require("./routes/rideRoutes.js");
+app.use("/rides", ride);
+
+const requests = require("./routes/requestsRoutes.js");
+app.use("/requests", requests);
+
+const algorithm = require("./routes/algorithmRoutes.js");
+app.use("/recommend", algorithm);
+
+const route = require("./routes/routeRoutes.js");
+app.use("/routes", route);
 
 const server = http.createServer(app);
 
 server.listen(port, () => {
-  console.log(chalk.blue(`
+  console.log(
+    chalk.blue(`
    _______  ___  ______  ______ 
   |   __  ||   ||      ||   ___|
   |  |  | ||   ||  __  ||  |
@@ -59,6 +64,7 @@ server.listen(port, () => {
 |  |     |  | |  || |    |  |_|  ||___    |     | |  | |
 |  |     |  |_|  || |    |       |    |   | ___ | |__| |
 |  |____ |       || |___ |   _   | ___|   ||   ||      |
-|_______||_______||_____||__| |__||_______||___||______|`))
-  console.log(chalk.blue(`\nRunning in port ${port}`))
-})
+|_______||_______||_____||__| |__||_______||___||______|`),
+  );
+  console.log(chalk.blue(`\nRunning in port ${port}`));
+});

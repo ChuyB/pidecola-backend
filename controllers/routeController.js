@@ -1,7 +1,24 @@
+/**
+ * Este módulo contiene los métodos para manejar las rutas en la base de datos.
+ * @module controllers/routesController
+ * @author Jesús Bovea <19-10072@gmail.com>
+ * @require lib/utils/utils.callbackReturn
+ * @require lib/utils/response.response
+ * @require models/routeModel.js
+ */
+
 const response = require("../lib/utils/response").response;
 const routes = require("../models/routeModel.js");
 const callback = require("../lib/utils/utils").callbackReturn;
 
+/**
+ * Función que recibe una HTTP request para agregar una nueva ruta
+ * a la base de datos.
+ * @public
+ * @param {Object} req - Un HTTP Request
+ * @param {Object} res - Un HTTP Response
+ * @returns {Object} 
+ */
 exports.addNewRoute = async (req, res) => {
   const name = req.body.name;
 
@@ -24,6 +41,14 @@ exports.addNewRoute = async (req, res) => {
   return res.status(200).send(response(true, "", "Ruta creada"));
 };
 
+/**
+ * Función que recibe una HTTP request y response con un arreglo
+ * de todos los nombres de las rutas existentes
+ * @public
+ * @param {Object} req - Un HTTP Request
+ * @param {Object} res - Un HTTP Response
+ * @returns {Object} 
+ */
 exports.getAllRoutesNames = async (_, res) => {
   try {
     const allRoutes = await routes.find({});
@@ -36,6 +61,13 @@ exports.getAllRoutesNames = async (_, res) => {
   }
 };
 
+/**
+ * Función que recibe una HTTP request y elimina una ruta por su nombre
+ * @public
+ * @param {Object} req - Un HTTP Request
+ * @param {Object} res - Un HTTP Response
+ * @returns {Object} 
+ */
 exports.deleteRouteByName = async (req, res) => {
   const { name } = req.body;
 
@@ -75,6 +107,14 @@ exports.deleteRouteByName = async (req, res) => {
   }
 };
 
+/**
+ * Función que recibe una HTTP request y actualiza una ruta por su nombre
+ * cambiando ese nombre
+ * @public
+ * @param {Object} req - Un HTTP Request
+ * @param {Object} res - Un HTTP Response
+ * @returns {Object} 
+ */
 exports.updateRouteByName = async (req, res) => {
   const { previousName, newName } = req.body;
 

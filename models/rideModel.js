@@ -11,8 +11,8 @@ const RideSchema = new Schema({
     type: String,
     enum: ["En Espera", "En Camino", "Finalizado", "Accidentado"],
   },
-  start_location_id: { type: Schema.Types.ObjectId, ref: "Route" },
-  destination_id: { type: Schema.Types.ObjectId, ref: "Route" },
+  start_location_id: { type: String },
+  destination_id: { type: String },
   time: { type: Date },
   ride_finished: { type: Boolean },
   comments: [
